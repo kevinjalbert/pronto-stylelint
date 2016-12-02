@@ -28,7 +28,7 @@ module Pronto
         before(:each) do
           create_repository
 
-          stylelint_config = <<~HEREDOC
+          stylelint_config = <<-HEREDOC
             {
               "rules": {
                 "color-named": "never",
@@ -37,7 +37,7 @@ module Pronto
             }
           HEREDOC
 
-          content = <<~HEREDOC
+          content = <<-HEREDOC
             .thing {
               font-size: 10em;
             }
@@ -57,7 +57,7 @@ module Pronto
           before(:each) do
             create_branch("staging", checkout: true)
 
-            updated_content = <<~HEREDOC
+            updated_content = <<-HEREDOC
               .thing {
                 font-size:  10px;
               }
@@ -97,7 +97,7 @@ module Pronto
           before(:each) do
             create_branch("staging", checkout: true)
 
-            updated_content = <<~HEREDOC
+            updated_content = <<-HEREDOC
               .thing {
                 font-size:  10px;
               }
