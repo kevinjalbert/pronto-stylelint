@@ -3,3 +3,5 @@ pkg/*
 .bundle
 .DS_Store
 Gemfile.lock
+
+coverage
