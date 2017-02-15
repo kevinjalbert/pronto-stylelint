@@ -29,10 +29,12 @@ Following options are available:
 | Option               | Meaning                                                                   | Default                                   |
 | -------------------- | ------------------------------------------------------------------------- | ----------------------------------------- |
 | stylelint_executable | stylelint executable to call.                                             | `stylelint` (calls `stylelint` in `PATH`) |
+| cli_options          | Options to pass to the CLI.                                               | `-f json`                                     |
 
-Example configuration to call custom stylelint executable:
+Example configuration to call custom stylelint executable and specify custom options:
 
 ```yaml
 # .pronto_stylelint.yml
 stylelint_executable: '/my/custom/node/path/.bin/stylelint'
+cli_options: '--config /custom/stylelintrc'
 ```

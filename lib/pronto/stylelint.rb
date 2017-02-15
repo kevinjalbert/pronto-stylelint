@@ -4,12 +4,20 @@ require 'shellwords'
 module Pronto
   class Stylelint < Runner
     CONFIG_FILE = '.pronto_stylelint.yml'.freeze
-    CONFIG_KEYS = %w(stylelint_executable).freeze
+    CONFIG_KEYS = %w(stylelint_executable cli_options).freeze
 
-    attr_writer :stylelint_executable
+    attr_writer :stylelint_executable, :cli_options
 
     def stylelint_executable
       @stylelint_executable || 'stylelint'.freeze
+    end
+
+    def cli_options
+      if @cli_options
+        @cli_options + ' -f json'.freeze
+      else
+        '-f json'.freeze
+      end
     end
 
     def files_to_lint
@@ -71,7 +79,7 @@ module Pronto
       Dir.chdir(repo_path) do
         escaped_file_path = Shellwords.escape(patch.new_file_full_path.to_s)
         JSON.parse(
-          `#{stylelint_executable} #{escaped_file_path} -f json`
+          `#{stylelint_executable} #{escaped_file_path} #{cli_options}`
         )
       end
     end
