@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.authors = ['Kevin Jalbert']
   s.email = 'kevin.j.jalbert@gmail.com'
-  s.homepage = 'http://github.org/kevinjalbert/pronto-stylelint'
+  s.homepage = 'https://github.com/kevinjalbert/pronto-stylelint'
   s.summary = <<-EOF
     Pronto runner for stylelint, the mighty, modern CSS linter.
   EOF
