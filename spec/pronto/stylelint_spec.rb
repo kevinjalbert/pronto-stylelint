@@ -5,14 +5,49 @@ module Pronto
     let(:stylelint) { Stylelint.new(patches) }
     let(:patches) { [] }
 
+    describe '#cli_options' do
+      around(:example) do |example|
+        create_repository
+        Dir.chdir(repository_dir) do
+          example.run
+        end
+        delete_repository
+      end
+
+      context 'with custom cli_options' do
+        before(:each) do
+          add_to_index('.pronto_stylelint.yml', "cli_options: '--test option'")
+          create_commit
+        end
+
+        it 'has custom cli options applied (has -f json on end)' do
+          expect(stylelint.cli_options).to eq('--test option -f json')
+        end
+      end
+
+      context 'without custom cli_options' do
+        it 'has just -f json cli options' do
+          expect(stylelint.cli_options).to eq('-f json')
+        end
+      end
+    end
+
     describe '#run' do
-      subject(:run) { stylelint.run }
+      around(:example) do |example|
+        create_repository
+        Dir.chdir(repository_dir) do
+          example.run
+        end
+        delete_repository
+      end
+
+      let(:patches) { Pronto::Git::Repository.new(repository_dir).diff("master") }
 
       context 'patches are nil' do
         let(:patches) { nil }
 
         it 'returns an empty array' do
-          expect(run).to eql([])
+          expect(stylelint.run).to eql([])
         end
       end
 
@@ -20,14 +55,12 @@ module Pronto
         let(:patches) { [] }
 
         it 'returns an empty array' do
-          expect(run).to eql([])
+          expect(stylelint.run).to eql([])
         end
       end
 
       context 'with patch data' do
         before(:each) do
-          create_repository
-
           stylelint_config = <<-HEREDOC
             {
               "rules": {
@@ -49,10 +82,6 @@ module Pronto
           create_commit
         end
 
-        after(:each) { delete_repository }
-
-        let(:patches) { Pronto::Git::Repository.new(repo.path).diff("master") }
-
         context "with warnings" do
           before(:each) do
             create_branch("staging", checkout: true)
@@ -71,11 +100,11 @@ module Pronto
           end
 
           it 'returns correct number of warnings' do
-            expect(run.count).to eql(2)
+            expect(stylelint.run.count).to eql(2)
           end
 
           it "has correct first message" do
-            expect(run.first.msg).to eql('Unexpected named color "pink" (color-named)')
+            expect(stylelint.run.first.msg).to eql('Unexpected named color "pink" (color-named)')
           end
         end
 
@@ -89,7 +118,7 @@ module Pronto
           end
 
           it 'returns no warnings' do
-            expect(run.count).to eql(0)
+            expect(stylelint.run.count).to eql(0)
           end
         end
 
@@ -113,7 +142,7 @@ module Pronto
           end
 
           it 'calls the custom stylelint stylelint_executable' do
-            expect { run }.to raise_error(JSON::ParserError, /custom stylelint called/)
+            expect { stylelint.run }.to raise_error(JSON::ParserError, /custom stylelint called/)
           end
         end
       end
