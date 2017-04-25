@@ -4,12 +4,21 @@ require 'shellwords'
 module Pronto
   class Stylelint < Runner
     CONFIG_FILE = '.pronto_stylelint.yml'.freeze
-    CONFIG_KEYS = %w(stylelint_executable).freeze
+    CONFIG_KEYS = %w(stylelint_executable cli_options).freeze
 
-    attr_writer :stylelint_executable
+    attr_writer :stylelint_executable, :cli_options
+
+    def initialize(patches, commit = nil)
+      super(patches, commit)
+      read_config
+    end
 
     def stylelint_executable
       @stylelint_executable || 'stylelint'.freeze
+    end
+
+    def cli_options
+      "#{@cli_options} -f json".strip
     end
 
     def files_to_lint
@@ -17,7 +26,7 @@ module Pronto
     end
 
     def read_config
-      config_file = File.join(repo_path, CONFIG_FILE)
+      config_file = File.join(git_repo_path, CONFIG_FILE)
       return unless File.exist?(config_file)
       config = YAML.load_file(config_file)
 
@@ -30,8 +39,6 @@ module Pronto
     def run
       return [] if !@patches || @patches.count.zero?
 
-      read_config
-
       @patches
         .select { |patch| patch.additions > 0 }
         .select { |patch| style_file?(patch.new_file_full_path) }
@@ -41,8 +48,8 @@ module Pronto
 
     private
 
-    def repo_path
-      @_repo_path ||= @patches.first.repo.path
+    def git_repo_path
+      @git_repo_path ||= Rugged::Repository.discover(File.expand_path(Dir.pwd)).workdir
     end
 
     def inspect(patch)
@@ -68,10 +75,10 @@ module Pronto
     end
 
     def run_stylelint(patch)
-      Dir.chdir(repo_path) do
+      Dir.chdir(git_repo_path) do
         escaped_file_path = Shellwords.escape(patch.new_file_full_path.to_s)
         JSON.parse(
-          `#{stylelint_executable} #{escaped_file_path} -f json`
+          `#{stylelint_executable} #{escaped_file_path} #{cli_options}`
         )
       end
     end

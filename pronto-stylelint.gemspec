@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
   s.requirements << 'stylelint (in PATH)'
 
   s.add_dependency('pronto', '~> 0.8.2')
+  s.add_dependency('rugged', '~> 0.24', '>= 0.23.0')
   s.add_development_dependency('rake', '~> 11.0')
   s.add_development_dependency('rspec', '~> 3.4')
 end

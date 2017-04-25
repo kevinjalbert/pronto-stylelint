@@ -50,4 +50,3 @@ module RepositoryHelper
     repo.checkout(branch_name, strategy: [:force])
   end
 end
-
