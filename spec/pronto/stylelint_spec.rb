@@ -86,7 +86,7 @@ module Pronto
           before(:each) do
             create_branch("staging", checkout: true)
 
-            updated_content = <<-HEREDOC
+            add_to_index('style.css', <<-HEREDOC)
               .thing {
                 font-size:  10px;
               }
@@ -94,17 +94,45 @@ module Pronto
               a { color: pink;}
             HEREDOC
 
-            add_to_index('style.css', updated_content)
+            add_to_index('style.scss', <<-HEREDOC)
+              .thing {
+                font-size:  10px;
+
+                a { color: pink;}
+              }
+            HEREDOC
 
             create_commit
           end
 
           it 'returns correct number of warnings' do
-            expect(stylelint.run.count).to eql(2)
+            expect(stylelint.run.count).to eql(4)
           end
 
           it "has correct first message" do
             expect(stylelint.run.first.msg).to eql('Unexpected named color "pink" (color-named)')
+          end
+
+          context 'with files to lint config that matches only .css' do
+            before do
+              add_to_index('.pronto_stylelint.yml', "files_to_lint: '\\.css$'")
+              create_commit
+            end
+
+            it 'returns correct number of warnings' do
+              expect(stylelint.run.count).to eql(2)
+            end
+          end
+
+          context 'with files to lint config that never matches' do
+            before do
+              add_to_index('.pronto_stylelint.yml', "files_to_lint: 'will never match'")
+              create_commit
+            end
+
+            it 'returns zero warnings' do
+              expect(stylelint.run.count).to eql(0)
+            end
           end
         end
 

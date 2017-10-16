@@ -4,7 +4,7 @@ require 'shellwords'
 module Pronto
   class Stylelint < Runner
     CONFIG_FILE = '.pronto_stylelint.yml'.freeze
-    CONFIG_KEYS = %w(stylelint_executable cli_options).freeze
+    CONFIG_KEYS = %w(stylelint_executable files_to_lint cli_options).freeze
 
     attr_writer :stylelint_executable, :cli_options
 
@@ -22,7 +22,11 @@ module Pronto
     end
 
     def files_to_lint
-      /\.(c|sc|sa|le)ss$/.freeze
+      @files_to_lint || /\.(c|sc|sa|le)ss$/.freeze
+    end
+
+    def files_to_lint=(regexp)
+      @files_to_lint = regexp.is_a?(Regexp) ? regexp : Regexp.new(regexp)
     end
 
     def read_config
