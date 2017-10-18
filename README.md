@@ -6,7 +6,7 @@
 [![Test Coverage](https://codeclimate.com/github/kevinjalbert/pronto-stylelint/badges/coverage.svg)](https://codeclimate.com/github/kevinjalbert/pronto-stylelint/coverage)
 [![Dependency Status](https://gemnasium.com/badges/github.com/kevinjalbert/pronto-stylelint.svg)](https://gemnasium.com/github.com/kevinjalbert/pronto-stylelint)
 
-Pronto runner for [stylelint](http://stylelint.io), the mighty, modern CSS linter. [What is Pronto?](https://github.com/mmozuras/pronto)
+Pronto runner for [stylelint](http://stylelint.io), the mighty, modern CSS linter. [What is Pronto?](https://github.com/prontolabs/pronto)
 
 Uses official stylelint executable installed by `npm`.
 
@@ -26,15 +26,17 @@ pronto-stylelint can be configured by placing a `.pronto_stylelint.yml` inside t
 
 Following options are available:
 
-| Option               | Meaning                                                                   | Default                                   |
-| -------------------- | ------------------------------------------------------------------------- | ----------------------------------------- |
-| stylelint_executable | stylelint executable to call.                                             | `stylelint` (calls `stylelint` in `PATH`) |
-| cli_options          | Options to pass to the CLI.                                               | `-f json`                                     |
+| Option               | Meaning                                                                                  | Default                                   |
+| -------------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------- |
+| stylelint_executable | stylelint executable to call.                                                            | `stylelint` (calls `stylelint` in `PATH`) |
+| files_to_lint        | What files to lint. Absolute path of offending file will be matched against this Regexp. | `\.(c\|sc\|sa\|le)ss$`                    |
+| cli_options          | Options to pass to the CLI.                                                              | `-f json`                                 |
 
 Example configuration to call custom stylelint executable and specify custom options:
 
 ```yaml
 # .pronto_stylelint.yml
 stylelint_executable: '/my/custom/node/path/.bin/stylelint'
+files_to_lint: '\.(c|sc)ss$'
 cli_options: '--config /custom/stylelintrc'
 ```
