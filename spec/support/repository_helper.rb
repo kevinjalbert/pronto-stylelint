@@ -1,3 +1,5 @@
+require 'tmpdir'
+
 module RepositoryHelper
   module_function
 
