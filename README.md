@@ -4,7 +4,6 @@
 [![Build Status](https://travis-ci.org/kevinjalbert/pronto-stylelint.svg?branch=master)](https://travis-ci.org/kevinjalbert/pronto-stylelint)
 [![Code Climate](https://codeclimate.com/github/kevinjalbert/pronto-stylelint/badges/gpa.svg)](https://codeclimate.com/github/kevinjalbert/pronto-stylelint)
 [![Test Coverage](https://codeclimate.com/github/kevinjalbert/pronto-stylelint/badges/coverage.svg)](https://codeclimate.com/github/kevinjalbert/pronto-stylelint/coverage)
-[![Dependency Status](https://gemnasium.com/badges/github.com/kevinjalbert/pronto-stylelint.svg)](https://gemnasium.com/github.com/kevinjalbert/pronto-stylelint)
 
 Pronto runner for [stylelint](http://stylelint.io), the mighty, modern CSS linter. [What is Pronto?](https://github.com/prontolabs/pronto)
 
