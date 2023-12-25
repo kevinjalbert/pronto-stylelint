@@ -65,14 +65,14 @@ module Pronto
             {
               "rules": {
                 "color-named": "never",
-                "unit-whitelist": ["em"]
+                "unit-no-unknown": true
               }
             }
           HEREDOC
 
           content = <<-HEREDOC
             .thing {
-              font-size: 10em;
+              font-size: 10pxem;
             }
           HEREDOC
 
@@ -88,7 +88,7 @@ module Pronto
 
             add_to_index('style.css', <<-HEREDOC)
               .thing {
-                font-size:  10px;
+                font-size:  10pxem;
               }
 
               a { color: pink;}
@@ -96,7 +96,7 @@ module Pronto
 
             add_to_index('style.scss', <<-HEREDOC)
               .thing {
-                font-size:  10px;
+                font-size:  10pxem;
 
                 a { color: pink;}
               }
