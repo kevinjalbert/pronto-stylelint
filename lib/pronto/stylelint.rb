@@ -1,5 +1,6 @@
 require 'pronto'
 require 'shellwords'
+require 'open3'
 
 module Pronto
   class Stylelint < Runner
@@ -81,9 +82,16 @@ module Pronto
     def run_stylelint(patch)
       Dir.chdir(git_repo_path) do
         escaped_file_path = Shellwords.escape(patch.new_file_full_path.to_s)
-        JSON.parse(
-          `#{stylelint_executable} #{escaped_file_path} #{cli_options}`
-        )
+        Open3.popen3("#{stylelint_executable} #{escaped_file_path} #{cli_options}") do |_stdin, stdout, stderr, thread|
+          status = thread.value
+          json = stdout.read
+          if status.to_i == 0 && json.length == 0
+            []
+          else
+            json = stderr.read if json.length == 0
+            JSON.parse(json)
+          end
+        end
       end
     end
 
