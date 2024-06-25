@@ -9,11 +9,7 @@ module Pronto
   class Stylelint < Runner
     extend Forwardable
 
-    CONFIG_FILE = '.pronto_stylelint.yml'
-    CONFIG_KEYS = %w[stylelint_executable files_to_lint cli_options].freeze
-    DEPRECATED_CONFIG =
-      "Pronto::Stylelint: Using %<config_key>s from #{CONFIG_FILE} is deprecated. " \
-      'Use .pronto.yml instead.'
+    attr_reader :stylelint_config
 
     def_delegators(
       :stylelint_config,
@@ -26,6 +22,8 @@ module Pronto
 
     def initialize(patches, commit = nil)
       super
+
+      @stylelint_config ||= Pronto::Stylelint::Config.new
     end
 
     def run
@@ -57,10 +55,6 @@ module Pronto
       level = :warning
 
       Message.new(path, line, level, offence['text'], nil, self.class)
-    end
-
-    def stylelint_config
-      @stylelint_config ||= Pronto::Stylelint::Config.new
     end
 
     def style_file?(path)
