@@ -1,14 +1,15 @@
 AllCops:
   DisplayCopNames: true
   DisplayStyleGuide: true
+  NewCops: enable
 
-Documentation:
+Style/Documentation:
   Enabled: false
 
 Metrics/MethodLength:
   Max: 20
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 100
 
 Metrics/AbcSize:
@@ -16,3 +17,7 @@ Metrics/AbcSize:
 
 Metrics/ParameterLists:
   Max: 10
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
