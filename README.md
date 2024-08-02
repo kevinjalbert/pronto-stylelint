@@ -7,13 +7,13 @@
 
 Pronto runner for [stylelint](http://stylelint.io), the mighty, modern CSS linter. [What is Pronto?](https://github.com/prontolabs/pronto)
 
-Uses official stylelint executable installed by `npm`.
+Uses the official stylelint executable installed by `npm`.
 
 Heavily inspired by [doits/pronto-eslint_npm](https://github.com/doits/pronto-eslint_npm).
 
 ## Prerequisites
 
-You'll need to install [stylelint by yourself with npm](http://stylelint.io/user-guide/cli/). If `stylelint` is in your `PATH`, everything will simply work, otherwise you have to provide pronto-stylelint your custom executable path (see [below](#configuration-of-stylelint)).
+You'll need to install [stylelint by yourself with npm](http://stylelint.io/user-guide/cli/). If `stylelint` is in your `PATH`, everything will simply work, otherwise, you have to provide pronto-stylelint your custom executable path (see [below](#configuration-of-stylelint)).
 
 ## Configuration of stylelint
 
@@ -21,9 +21,9 @@ Configuring stylelint via [.stylelintrc and consorts](http://stylelint.io/user-g
 
 ## Configuration of pronto-stylelint
 
-pronto-stylelint can be configured by placing a `.pronto_stylelint.yml` inside the directory where pronto is run.
+pronto-stylelint can be configured by adding to the [pronto configuration file](https://github.com/prontolabs/pronto?tab=readme-ov-file#configuration) `.pronto.yml`.
 
-Following options are available:
+The following options are available:
 
 | Option               | Meaning                                                                                  | Default                                   |
 | -------------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------- |
@@ -34,8 +34,9 @@ Following options are available:
 Example configuration to call custom stylelint executable and specify custom options:
 
 ```yaml
-# .pronto_stylelint.yml
-stylelint_executable: '/my/custom/node/path/.bin/stylelint'
-files_to_lint: '\.(c|sc)ss$'
-cli_options: '--config /custom/stylelintrc'
+# .pronto.yml
+stylelint:
+  stylelint_executable: '/my/custom/node/path/.bin/stylelint'
+  files_to_lint: '\.(c|sc)ss$'
+  cli_options: '--config /custom/stylelintrc'
 ```

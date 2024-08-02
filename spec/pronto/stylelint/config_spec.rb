@@ -17,15 +17,6 @@ module Pronto
 
         context 'with custom cli_options' do
           before do
-            add_to_index('.pronto_stylelint.yml', "cli_options: '--test option'")
-            create_commit
-          end
-
-          it { expect(cli_options).to eq('--test option -f json') }
-        end
-
-        context 'with custom cli_options via the .pronto.yml' do
-          before do
             add_to_index('.pronto.yml', "stylelint:\n  cli_options: '--test option'")
             create_commit
           end
@@ -46,20 +37,6 @@ module Pronto
           include_context 'repo'
 
           before do
-            add_to_index('.pronto_stylelint.yml', "files_to_lint: '\\.css$'")
-            create_commit
-          end
-
-          it { expect(files_to_lint).to match('my_css.css') }
-          it { expect(files_to_lint).not_to match('my_less.less') }
-          it { expect(files_to_lint).not_to match('my_scss.scss') }
-          it { expect(files_to_lint).not_to match('my_sass.sass') }
-        end
-
-        context 'with custom files_to_lint via the .pronto.yml' do
-          include_context 'repo'
-
-          before do
             add_to_index('.pronto.yml', "stylelint:\n  files_to_lint: '\\.css$'")
             create_commit
           end
@@ -77,17 +54,6 @@ module Pronto
         it { expect(stylelint_executable).to eql('stylelint') }
 
         context 'with custom stylelint_executable' do
-          include_context 'repo'
-
-          before do
-            add_to_index('.pronto_stylelint.yml', "stylelint_executable: 'custom_stylelint'")
-            create_commit
-          end
-
-          it { expect(stylelint_executable).to eql('custom_stylelint') }
-        end
-
-        context 'with custom stylelint_executable via the .pronto.yml' do
           include_context 'repo'
 
           before do

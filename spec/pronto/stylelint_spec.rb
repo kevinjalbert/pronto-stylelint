@@ -76,7 +76,7 @@ module Pronto
 
           context 'with files to lint config that matches only .css' do
             before do
-              add_to_index('.pronto_stylelint.yml', "files_to_lint: '\\.css$'")
+              add_to_index('.pronto.yml', "stylelint:\n  files_to_lint: '\\.css$'")
               create_commit
             end
 
@@ -85,7 +85,7 @@ module Pronto
 
           context 'with files to lint config that never matches' do
             before do
-              add_to_index('.pronto_stylelint.yml', "files_to_lint: 'will never match'")
+              add_to_index('.pronto.yml', "stylelint:\n  files_to_lint: 'will never match'")
               create_commit
             end
 
@@ -118,7 +118,7 @@ module Pronto
             HEREDOC
 
             add_to_index('style.css', updated_content)
-            add_to_index('.pronto_stylelint.yml', "stylelint_executable: './custom_stylelint'")
+            add_to_index('.pronto.yml', "stylelint:\n  stylelint_executable: './custom_stylelint'")
             add_to_index('custom_stylelint', "printf 'custom stylelint called'")
 
             create_commit

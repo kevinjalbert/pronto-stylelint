@@ -5,46 +5,19 @@ require 'pronto'
 module Pronto
   class Stylelint < Runner
     class Config
-      CONFIG_FILE = '.pronto_stylelint.yml'
-      CONFIG_KEYS = %w[stylelint_executable files_to_lint cli_options].freeze
-      DEPRECATED_CONFIG =
-        "Pronto::Stylelint: Using %<config_key>s from #{CONFIG_FILE} is deprecated. " \
-        'Use .pronto.yml instead.'
-
-      attr_writer :stylelint_executable, :cli_options
-
-      def initialize
-        read_config
-      end
+      EXECUTABLE_DEFAULT = 'stylelint'
+      FILES_TO_LINT_DEFAULT = /\.(c|sc|sa|le)ss$/.freeze
 
       def stylelint_executable
-        stylelint_config['stylelint_executable'] || @stylelint_executable || 'stylelint'
+        stylelint_config['stylelint_executable'] || EXECUTABLE_DEFAULT
       end
 
       def cli_options
-        "#{stylelint_config['cli_options'] || @cli_options} -f json".strip
+        "#{stylelint_config['cli_options']} -f json".strip
       end
 
       def files_to_lint
-        config_files_to_lint || @files_to_lint || /\.(c|sc|sa|le)ss$/.freeze
-      end
-
-      def files_to_lint=(regexp)
-        @files_to_lint = regexp.is_a?(Regexp) ? regexp : Regexp.new(regexp)
-      end
-
-      def read_config
-        config_file = File.join(git_repo_path, CONFIG_FILE)
-        return unless File.exist?(config_file)
-
-        config = YAML.load_file(config_file)
-
-        CONFIG_KEYS.each do |config_key|
-          next unless config[config_key]
-
-          warn format(DEPRECATED_CONFIG, config_key: config_key)
-          send("#{config_key}=", config[config_key])
-        end
+        config_files_to_lint || FILES_TO_LINT_DEFAULT
       end
 
       def git_repo_path
