@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'tmpdir'
 
 module RepositoryHelper
@@ -15,16 +17,16 @@ module RepositoryHelper
   end
 
   def repository_dir
-    File.realpath(tmp_git_dir) + '/'
+    "#{File.realpath(tmp_git_dir)}/"
   end
 
   def current_branch_name
-    repo.head.name.sub(/^refs\/heads\//, '')
+    repo.head.name.sub(%r{^refs/heads/}, '')
   end
 
   def add_to_index(file_name, blob_content)
     object_id = repo.write(blob_content, :blob)
-    repo.index.add(path: file_name, oid: object_id, mode: 0100755)
+    repo.index.add(path: file_name, oid: object_id, mode: 0o100755)
     repo.index.write
   end
 
