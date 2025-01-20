@@ -4,6 +4,7 @@ require 'pronto'
 require 'shellwords'
 require 'open3'
 require 'pronto/stylelint/config'
+require 'pronto/stylelint/linter'
 
 module Pronto
   class Stylelint < Runner
@@ -13,12 +14,9 @@ module Pronto
 
     def_delegators(
       :stylelint_config,
-      :stylelint_executable,
-      :cli_options,
-      :files_to_lint,
-      :git_repo_path
+      :files_to_lint
     )
-    private :stylelint_executable, :cli_options, :files_to_lint, :git_repo_path
+    private :files_to_lint
 
     def initialize(patches, commit = nil)
       super
@@ -37,12 +35,8 @@ module Pronto
 
     private
 
-    def cli_command(escaped_file_path)
-      "#{stylelint_executable} #{escaped_file_path} #{cli_options}"
-    end
-
     def inspect(patch)
-      clean_up_stylelint_output(run_stylelint(patch)).flat_map do |offence|
+      clean_up_stylelint_output(Linter.new(patch, stylelint_config).run).flat_map do |offence|
         patch
           .added_lines
           .select { |line| line.new_lineno == offence['line'] }
@@ -59,22 +53,6 @@ module Pronto
 
     def style_file?(path)
       files_to_lint =~ path.to_s
-    end
-
-    def run_stylelint(patch)
-      Dir.chdir(git_repo_path) do
-        escaped_file_path = Shellwords.escape(patch.new_file_full_path.to_s)
-        Open3.popen3(cli_command(escaped_file_path)) do |_stdin, stdout, stderr, thread|
-          status = thread.value
-          json = stdout.read
-          if status.to_i.zero? && json.empty?
-            []
-          else
-            json = stderr.read if json.empty?
-            JSON.parse(json)
-          end
-        end
-      end
     end
 
     def clean_up_stylelint_output(output)
