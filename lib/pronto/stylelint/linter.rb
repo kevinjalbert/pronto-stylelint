@@ -37,18 +37,16 @@ module Pronto
 
       def run
         Dir.chdir(git_repo_path) do
-          Open3.popen3(cli_command) do |_stdin, stdout, stderr, thread|
-            JSON.parse(
-              case thread_status(thread)
-              when :success, :lint_problem
-                out = stdout.read
-                out.empty? ? stderr.read : out
-              else
-                puts "#{STYLELINT_FAILURE} - #{thread_status(thread)}:\n#{stderr.read}"
-                '[]'
-              end
-            )
-          end
+          stdout, stderr, status = Open3.capture3(cli_command)
+          JSON.parse(
+            case thread_status(status)
+            when :success, :lint_problem
+              stdout.empty? ? stderr : stdout
+            else
+              puts "#{STYLELINT_FAILURE} - #{thread_status(status)}:\n#{stderr}"
+              '[]'
+            end
+          )
         end
       end
 
@@ -64,8 +62,8 @@ module Pronto
 
       # Status codes:
       # https://stylelint.io/user-guide/cli/#exit-codes
-      def thread_status(thread)
-        STATUS_CODES[thread.value.exitstatus] || :unknown
+      def thread_status(status)
+        STATUS_CODES[status.exitstatus] || :unknown
       end
     end
   end
